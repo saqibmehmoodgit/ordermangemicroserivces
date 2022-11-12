@@ -1,0 +1,5 @@
+com/prodig/micro/stock/repository/ProductRepository.class
+com/prodig/micro/stock/StockSerivceMain.class
+com/prodig/micro/stock/domain/Product.class
+com/prodig/micro/stock/service/OrderManageService.class
+com/prodig/micro/stock/web/StockerServiceController.class

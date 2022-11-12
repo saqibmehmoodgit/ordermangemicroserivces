@@ -1,0 +1,5 @@
+com/prodig/micro/payment/repository/CustomerRepository.class
+com/prodig/micro/payment/web/PaymentServiceController.class
+com/prodig/micro/payment/service/OrderManageService.class
+com/prodig/micro/payment/domain/Customer.class
+com/prodig/micro/payment/PaymentSerivceMain.class

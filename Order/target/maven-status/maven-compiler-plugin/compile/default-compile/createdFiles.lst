@@ -1,0 +1,5 @@
+com/prodig/micro/order/kafkaconfig/KafkaConfiguration.class
+com/prodig/micro/order/OrderMain.class
+com/prodig/micro/order/service/OrderGeneratorService.class
+com/prodig/micro/order/web/OrderController.class
+com/prodig/micro/order/service/OrderManageService.class
