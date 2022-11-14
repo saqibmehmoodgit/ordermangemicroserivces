@@ -11,6 +11,10 @@ import org.springframework.stereotype.Service;
 public class OrderManageService {
 
     public Order confirm(Order orderPayment, Order orderStock) {
+        System.out.println("   --------  ------------------------------------ ");
+        System.out.println("   --------  this is confrim order ordermanege method in Order service ");
+        System.out.println("   --------  ------------------------------------ ");
+
         Order o = new Order(orderPayment.getId(),
                 orderPayment.getCustomerId(),
                 orderPayment.getProductId(),

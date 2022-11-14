@@ -40,6 +40,24 @@ public class OrderManageService {
         template.send("payment-orders", order.getId(), order);
         LOG.info("Sent: {}", order);
     }
+    public void saveCustomer()
+    {
+        System.out.println("  this is id   ");
+                Customer customer =  new Customer();
+        customer.setName("SAQIB");
+        customer.setAmountAvailable(101);
+        customer.setAmountReserved(201);
+        Customer manged =   repository.save(customer);
+        System.out.println("  this is id   " +  manged.getId() +"  name "+  manged.getName() );
+    }
+
+    public Customer getCustomer(Long customerId)
+    {
+        System.out.println("  Payment    " +  customerId );
+        Customer manged =   repository.findById(customerId).get();
+        System.out.println("  this is id   " +  manged.getId() +"  name "+  manged.getName() );
+        return  manged;
+    }
 
     public void confirm(Order order) {
         Customer customer = repository.findById(order.getCustomerId()).orElseThrow();

@@ -2,7 +2,12 @@ package com.prodig.micro.order.web;
 
 //import lombok.extern.slf4j.Slf4j;
 import com.prodig.micro.basedomain.Order;
+import com.prodig.micro.basedomain.response.CustomerOrderResponse;
+import com.prodig.micro.clients.customer.CustomerCLient;
+import com.prodig.micro.clients.stock.StockCLient;
 import com.prodig.micro.order.service.OrderGeneratorService;
+import com.prodig.micro.payment.domain.Customer;
+import com.prodig.micro.stock.domain.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.apache.kafka.streams.StoreQueryParameters;
@@ -13,7 +18,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.config.StreamsBuilderFactoryBean;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.web.bind.annotation.*;
 
 
 import java.util.ArrayList;
@@ -38,12 +42,35 @@ public class OrderController
     @Autowired
     private OrderGeneratorService orderGeneratorService;
 
-    @PostMapping("/generatebypost")
+  @Autowired
+  CustomerCLient customerClient;
+  @Autowired
+  StockCLient stockCLient;
+    @PostMapping("/createCustomer")
     public Order create(@RequestBody Order order) {
         order.setId(id.incrementAndGet());
         template.send("orders", order.getId(), order);
         LOG.info("Sent: {}", order);
         return order;
+    }
+
+    @GetMapping("/getCustomerProduct/{customerId}")
+    public CustomerOrderResponse getCustomerProduct(@PathVariable("customerId") int customerId)
+    {
+     //  customerClient.getSingleCustomer(customerId);  //customerId
+        System.out.println(" this is  getCustomerProduct , feign clients ");
+        Order order = new Order();
+
+        Customer customer =   customerClient.getSingleCustomer((long)101);
+        Product  product  =     stockCLient.getSingleProduct((long) 1);
+        CustomerOrderResponse customerOrderResponse = new CustomerOrderResponse();
+        customerOrderResponse.setNameCustomer(customer.getName());
+        customerOrderResponse.setProductCount(order.getProductCount());
+        customerOrderResponse.setNameProduct(product.getName());
+        customerOrderResponse.setStatus(order.getStatus());
+        customerOrderResponse.setPrice(order.getPrice());
+
+        return customerOrderResponse;
     }
 
     @GetMapping("/generate")

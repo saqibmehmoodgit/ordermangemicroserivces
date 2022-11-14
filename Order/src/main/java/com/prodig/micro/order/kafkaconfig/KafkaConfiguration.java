@@ -38,6 +38,7 @@ public class KafkaConfiguration
     public NewTopic kafkaTopic()
     {
         ///return TopicBuilder.name("saqibkafka").build();
+        System.out.println("  this is ");
         return TopicBuilder.name("orders")
                 .partitions(3)
                 .compact()

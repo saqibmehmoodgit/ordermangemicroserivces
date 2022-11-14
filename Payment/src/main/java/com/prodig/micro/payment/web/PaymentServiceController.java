@@ -3,7 +3,11 @@ package com.prodig.micro.payment.web;
 //import lombok.extern.slf4j.Slf4j;
 
 import com.prodig.micro.basedomain.Order;
+import com.prodig.micro.payment.domain.Customer;
+import com.prodig.micro.payment.service.OrderManageService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,22 +17,24 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("api/v1/payment")
 public class PaymentServiceController
 {
-//    @Autowired
-//    CustomerService customerService;
+    @Autowired
+    OrderManageService orderManageService;
 
     @GetMapping(value = "/call")
-    public Order checkingServer()
+    public String checkingServer()
 
     {
         //log.info("  this is calling frausde ");
         System.out.println("  this is just PAYMENT  ");
-         Order  order =   new Order();
-        order.setCustomerId(405L);
-        order.setSource("PAYMENT");
-        order.setPrice(405);
-        return  order;
+        orderManageService.saveCustomer();
+        return  "order is saved ";
     }
-
-
+    @GetMapping(value = "/getSingleCustomer/{customerId}")
+    public Customer getSingleCustomer(@PathVariable Long customerId)
+    {
+        //log.info("  this is calling frausde ");
+        System.out.println("  this is just PAYMENT customerId through feign client ----------- " + customerId);
+        return  orderManageService.getCustomer(customerId);
+    }
 
 }

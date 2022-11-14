@@ -40,7 +40,25 @@ public class OrderManageService {
             LOG.info("Sent: {}", order);
         }
     }
+    public void saveProduct()
+    {
+        Product product = new Product();
+        product.setName("Car");
+        product.setAvailableItems(5);
+        product.setReservedItems(5);
+        Product productMnaged = repository.save(product);
 
+        System.out.println("     " + productMnaged.getId());
+
+
+    }
+    public Product findProduct(Long id )
+    {
+
+        Product productMnaged = repository.findById(id).get();
+
+       return productMnaged;
+    }
     public void confirm(Order order) {
         Product product = repository.findById(order.getProductId()).orElseThrow();
         LOG.info("Found: {}");
