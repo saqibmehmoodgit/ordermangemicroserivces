@@ -5,6 +5,7 @@ import com.prodig.micro.basedomain.Order;
 import com.prodig.micro.basedomain.response.CustomerOrderResponse;
 import com.prodig.micro.clients.customer.CustomerCLient;
 import com.prodig.micro.clients.stock.StockCLient;
+import com.prodig.micro.order.service.FeignClientServices;
 import com.prodig.micro.order.service.OrderGeneratorService;
 import com.prodig.micro.payment.domain.Customer;
 import com.prodig.micro.stock.domain.Product;
@@ -41,11 +42,8 @@ public class OrderController
     private StreamsBuilderFactoryBean kafkaStreamsFactory;
     @Autowired
     private OrderGeneratorService orderGeneratorService;
-
-  @Autowired
-  CustomerCLient customerClient;
-  @Autowired
-  StockCLient stockCLient;
+    @Autowired
+    FeignClientServices feignClientServices;
     @PostMapping("/createCustomer")
     public Order create(@RequestBody Order order) {
         order.setId(id.incrementAndGet());
@@ -57,29 +55,18 @@ public class OrderController
     @GetMapping("/getCustomerProduct/{customerId}")
     public CustomerOrderResponse getCustomerProduct(@PathVariable("customerId") int customerId)
     {
-     //  customerClient.getSingleCustomer(customerId);  //customerId
-        System.out.println(" this is  getCustomerProduct , feign clients ");
-        Order order = new Order();
 
-        Customer customer =   customerClient.getSingleCustomer((long)101);
-        Product  product  =     stockCLient.getSingleProduct((long) 1);
-        CustomerOrderResponse customerOrderResponse = new CustomerOrderResponse();
-        customerOrderResponse.setNameCustomer(customer.getName());
-        customerOrderResponse.setProductCount(order.getProductCount());
-        customerOrderResponse.setNameProduct(product.getName());
-        customerOrderResponse.setStatus(order.getStatus());
-        customerOrderResponse.setPrice(order.getPrice());
 
-        return customerOrderResponse;
+        return feignClientServices.getCustomerProduct(customerId);
     }
 
-    @GetMapping("/generate")
+    @GetMapping("/generateOrder")
     public boolean create() {
         orderGeneratorService.generate();
         return true;
     }
 
-    @GetMapping(value = "/getAll")
+    @GetMapping(value = "/getAllOrder")
     public List<Order> allOrders() {
         List<Order> orders = new ArrayList<>();
         ReadOnlyKeyValueStore<Long, Order> store = kafkaStreamsFactory
@@ -91,14 +78,6 @@ public class OrderController
         it.forEachRemaining(kv -> orders.add(kv.value));
         return orders;
     }
-  @GetMapping(value = "/testing")
-    public Order checkingServer()
-  {
-    System.out.println("  this is just checking  ");
-         Order  order =   new Order();
-        order.setCustomerId(45L);
-        order.setPrice(45);
-        return  order;
-    }
+
 
 }
